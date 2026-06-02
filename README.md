@@ -82,11 +82,13 @@ Gemini AI  →  interpret domain confidence, linker quality, folding coherence
 | Gemini Flash (Google AI Studio) | ✅ Server-side only | ✅ Free tier | Domain parsing & interpretation |
 | ESM3 (EvolutionaryScale Forge) | ✅ Server-side only | ✅ Free research tier | Linker sequence design |
 
-**Users never see or enter any API key.** Keys are stored in Streamlit Cloud secrets by the developer.
+**Users never see or enter any API key.** Keys are stored as secrets by the developer.
 
 ---
 
-## 🚀 Deployment (Streamlit Cloud)
+## 🚀 Deployment (Hugging Face Spaces — recommended)
+
+Hugging Face Spaces is the recommended deployment platform. It supports Streamlit natively, requires no full GitHub account access, and is purpose-built for ML/biology tools.
 
 ### Step 1 — Get free API keys (developer only, one-time)
 
@@ -98,18 +100,25 @@ Gemini AI  →  interpret domain confidence, linker quality, folding coherence
 1. Go to [forge.evolutionaryscale.ai](https://forge.evolutionaryscale.ai)
 2. Sign up → generate an API token
 
-### Step 2 — Deploy on Streamlit Cloud
-1. Go to [share.streamlit.io](https://share.streamlit.io)
-2. Click **New app** → connect this GitHub repo
-3. Set main file to `app.py`
-4. Go to **Advanced settings → Secrets** and paste:
+### Step 2 — Deploy on Hugging Face Spaces
+1. Go to [huggingface.co/spaces](https://huggingface.co/spaces)
+2. Click **Create new Space**
+3. Name it `ProtFoldLab`, choose **Streamlit** as the SDK, set to **Public**
+4. Upload all project files directly (no GitHub connection needed)
+5. Go to **Settings → Variables and Secrets** and add:
+   - `GEMINI_API_KEY` → your Gemini key
+   - `ESM_FORGE_KEY` → your ESM3 Forge key
+6. The Space builds automatically — share the URL with anyone
 
+### Alternative — Streamlit Cloud
+1. Go to [share.streamlit.io](https://share.streamlit.io)
+2. Connect your GitHub repo → set main file to `app.py`
+3. Go to **Advanced settings → Secrets** and paste:
 ```toml
 GEMINI_API_KEY = "your-gemini-key-here"
 ESM_FORGE_KEY  = "your-esm-forge-key-here"
 ```
-
-5. Click **Deploy** — share the URL with anyone
+4. Click **Deploy**
 
 ---
 

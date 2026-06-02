@@ -1,13 +1,10 @@
 """
 ProtFoldLab — Agentic Protein Folding & Chimeric Design Lab
-============================================================
-APIs (all free, keys stored server-side in Streamlit secrets):
-  - ESMFold   : api.esmatlas.com  (no key needed at all)
-  - ESM3      : forge.evolutionaryscale.ai (free key, server-side)
-  - Gemini    : generativelanguage.googleapis.com (free key, server-side)
-  - UniProt   : rest.uniprot.org  (no key needed at all)
+Works on: Hugging Face Spaces, Streamlit Cloud, or locally.
+Keys loaded server-side — users never see or enter them.
 """
 
+import os
 import streamlit as st
 
 st.set_page_config(
@@ -17,14 +14,16 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# ── Load server-side secrets (invisible to users) ─────────────────────────────
-try:
-    GEMINI_KEY = st.secrets["GEMINI_API_KEY"]
-    ESM_KEY    = st.secrets["ESM_FORGE_KEY"]
-except Exception:
-    # Fallback for local dev: set these in .streamlit/secrets.toml
-    GEMINI_KEY = ""
-    ESM_KEY    = ""
+# ── Load secrets (HF Spaces env vars OR Streamlit secrets) ───────────────────
+def _get_secret(key: str) -> str:
+    """Try Streamlit secrets first, then environment variables (HF Spaces)."""
+    try:
+        return st.secrets[key]
+    except Exception:
+        return os.environ.get(key, "")
+
+GEMINI_KEY = _get_secret("GEMINI_API_KEY")
+ESM_KEY    = _get_secret("ESM_FORGE_KEY")
 
 st.session_state["gemini_key"] = GEMINI_KEY
 st.session_state["esm_key"]    = ESM_KEY
@@ -40,13 +39,9 @@ with st.sidebar:
         "- 🧬 ESM3 — EvolutionaryScale Forge\n"
         "- 🤖 Gemini Flash — Google AI\n"
         "- 📦 UniProt REST API\n"
-        "- ⚙️ ProteinMPNN — NVIDIA NIM\n"
     )
     st.divider()
-    st.markdown(
-        "**No sign-up required.** "
-        "Just describe your protein and run."
-    )
+    st.markdown("**No sign-up required.** Just describe your protein and run.")
     st.divider()
     st.caption("ProtFoldLab v3.0")
 
