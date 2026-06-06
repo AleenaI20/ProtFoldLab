@@ -20,8 +20,8 @@ def render_3d_structure(pdb_string: str, height: int = 520) -> None:
 <head>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.1.0/3Dmol-min.js"></script>
   <style>
-    body{{margin:0;background:#0d1117}}
-    #v{{width:100%;height:{height}px;position:relative}}
+    html,body{{margin:0;padding:0;overflow:hidden;background:#0d1117}}
+    #v{{width:100%;height:{height}px;position:relative;overflow:hidden}}
     #c{{position:absolute;top:8px;right:8px;z-index:10;display:flex;flex-direction:column;gap:4px}}
     button{{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);
       padding:4px 10px;border-radius:6px;cursor:pointer;font-size:12px}}

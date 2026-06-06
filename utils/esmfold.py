@@ -157,22 +157,31 @@ def _extract_plddt(pdb_string: str) -> tuple[float, list[float]]:
             continue
         seen.add(key)
         try:
-            per_res.append(float(line[60:66].strip()))
+            val = float(line[60:66].strip())
+            per_res.append(val)
         except ValueError:
             pass
     if not per_res:
         return 0.0, []
+
+    # ESM Atlas returns pLDDT on 0–1 scale; convert to 0–100
+    if max(per_res) <= 1.0:
+        per_res = [v * 100 for v in per_res]
+
     return round(float(np.mean(per_res)), 2), per_res
 
 
 def _extract_ptm(pdb_string: str) -> Optional[float]:
+    # ESM Atlas encodes pTM in REMARK lines e.g.:
+    # REMARK  pTM: 0.832   or   REMARK  predicted_tm_score: 0.832
     for line in pdb_string.splitlines():
-        if "pTM" in line or "ptm" in line.lower():
-            parts = line.split()
-            for i, p in enumerate(parts):
-                if p.lower() in ("ptm:", "ptm"):
-                    try:
-                        return round(float(parts[i + 1]), 3)
-                    except (IndexError, ValueError):
-                        pass
+        low = line.lower()
+        if "ptm" in low or "predicted_tm" in low or "tm_score" in low:
+            # Try to extract any float from the line
+            matches = re.findall(r"[\d]+\.[\d]+", line)
+            if matches:
+                val = float(matches[-1])
+                # pTM is always 0–1
+                if 0.0 <= val <= 1.0:
+                    return round(val, 3)
     return None
