@@ -1,3 +1,13 @@
+---
+title: ProtFoldLab
+emoji: 🧬
+colorFrom: blue
+colorTo: green
+sdk: docker
+app_file: app.py
+pinned: false
+---
+
 # 🧬 ProtFoldLab
 
 **Agentic Protein Folding & Chimeric Design Lab**
